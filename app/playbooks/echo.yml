@@ -1,0 +1,14 @@
+- hosts: localhost
+  connection: local
+  tasks:
+    - ansible.builtin.ping:
+
+    - name: tarea de debug 
+      ansible.builtin.debug:
+        msg: "hello"
+      register: output
+
+    - name: Establecemos json a devolver
+      ansible.builtin.set_fact:
+        ansible_final_output: "{{ output }}"
+        cacheable: true
