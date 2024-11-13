@@ -13,12 +13,16 @@ def read_root():
 @app.post("/launch/")
 def launch_playbook(playbook_path:str, playbook_name:str ):
     # https://ansible.readthedocs.io/projects/runner/en/latest/
+    # https://ansible-runner-role.readthedocs.io/en/latest/guide.html
     # curl -X POST "http://192.168.56.101:8888/launch/?playbook_path=%2Fcode%2Fapp%2Fplaybooks&playbook_name=echo.yml"
     extravars = {'env':'DEV'}
     roles_path = '/code/ansible/roles'
-    r = ansible_runner.run(private_data_dir=playbook_path, playbook=playbook_name, extravars=extravars, roles_path=roles_path)
+    env = {}
+    env["ANSIBLE_CONFIG"] = '/code/ansible/ansible.cfg'       
+    r = ansible_runner.run(private_data_dir=playbook_path, playbook=playbook_name, extravars=extravars, roles_path=roles_path, envvars=env)
     #r = ansible_runner.run(private_data_dir='/code/app/playbooks', playbook='echo.yml')
     events_list = list(r.events)
+    # print(events_list)
     # Se extrae el event_data de events - Es donde viene la informacion de ejecucion de las tareas entre otras cosas
     event_data_list = [event.get('event_data',{}) for event in events_list]
     # Filtramos por las entradas que sean de fin de tarea (con resultado)
@@ -29,6 +33,11 @@ def launch_playbook(playbook_path:str, playbook_name:str ):
     print("Status: {}".format(r.status))
     print("Return code: {}".format(r.rc))
     print("Stats: {}".format(r.stats))
+
+    stats_stdout = [event for event in events_list if (event['event'] == 'playbook_on_stats')]
+
+    print(stats_stdout[0]['stdout'])
+
     #Si obtenemos el resultado de una tarea set_fact
     #final_json = tasks_results[0]['res']['ansible_facts']['ansible_final_output']
     # Si obtenemos el resultado de una tarea debug
