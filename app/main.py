@@ -34,6 +34,7 @@ def launch_playbook(playbook_path:str, playbook_name:str ):
     print("Return code: {}".format(r.rc))
     print("Stats: {}".format(r.stats))
 
+
     stats_stdout = [event for event in events_list if (event['event'] == 'playbook_on_stats')]
 
     print(stats_stdout[0]['stdout'])

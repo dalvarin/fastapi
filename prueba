@@ -1,0 +1,20 @@
+import sys
+
+def main():
+    # Verificar si se proporcionaron los argumentos esperados
+    if len(sys.argv) != 3:
+        print("Uso: python script.py <arg1> <arg2>")
+        return
+
+    # Obtener los argumentos de la línea de comandos
+    arg1 = sys.argv[1]
+    arg2 = sys.argv[2]
+
+    # Realizar alguna operación con los argumentos
+    resultado = arg1 + arg2
+
+    # Imprimir el resultado
+    print("El resultado es:", resultado)
+
+if __name__ == "__main__":
+    main()
